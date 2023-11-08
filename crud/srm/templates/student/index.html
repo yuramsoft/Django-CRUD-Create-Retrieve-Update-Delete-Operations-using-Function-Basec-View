@@ -1,0 +1,155 @@
+{% extends 'student/base.html' %}
+
+{% block content %}
+
+
+<div class="row">
+<div class="col-12">
+  <br>
+<div>
+  <a class="btn btn-outline-info btn-sm me-1" href="{% url 'add' %}"  >Add New Student</a> 
+</div>
+<!--looping through messages-->
+{% for message in messages %}
+<!-- This are css and js files needed for displaying sweetalert messages -->
+<script src="/static/dist/sweetalert.js"></script>
+<link rel="stylesheet" href="/static/dist/sweetalert.css">
+
+<!--if message tag is info as in view.py display registration success message-->
+{% if message.tags == 'info' %}
+
+<script>
+   var m = "{{ message }}";
+    swal("Registered", m, "info")
+</script>   
+
+<!--if message tag is info as in view.py display update success message-->
+{% elif message.tags == 'success' %} 
+<script>
+  var m = "{{ message }}";
+   swal("Update", m, "success")
+</script> 
+
+
+<!--if message tag is info as in view.py display delete success message-->
+{% elif message.tags == 'warning' %} 
+<script>
+  var m = "{{ message }}";
+   swal("Delete", m, "warning")
+</script> 
+
+{% endif %}
+{% endfor %}
+<br>
+        {% if students %}
+        <div class="card bg-light ms-4 me-4 mb-4">
+            <div class="card-header">
+            <i class="fa-solid fa-list fa-lg"></i> Student Records
+          </div>
+          <div class="card-body">
+            <p class="card-text">
+            <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">SN</th>
+                  <th scope="col">Student No.</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Phone</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for student in students %}
+                <tr>
+                  <td>{{ student.id }}</td>
+                  <td>{{ student.student_number }}</td>
+                  <td>{{ student.first_name }} {{ student.last_name }}</td>
+                  <td>{{ student.phone }}</td>
+                <td>
+                     <button type="button" class="btn btn-update btn-sm me-1"  href="{% url 'view_info' student.id %}" data-bs-toggle="modal" data-bs-target="#infoModal{{ student.id }}">
+                      <i class="fa-solid fa-circle-info fa-xl" ></i>
+                    </button>
+                    <!-- The Modal -->
+                      <div class="modal" id="infoModal{{ student.id }}">
+                        <div class="modal-dialog modal-sm">
+                          <div class="modal-content">
+  
+                      <!-- Modal Header -->
+                      <div class="modal-header">
+                        <h4 class="modal-title">Student: {{ student.first_name }} {{ student.last_name }}        
+                        </h4>
+                      </div>
+                      <!-- Modal body -->
+                      <div class="modal-body">
+                        <ul class="list-unstyled">
+                          <li>Student Number: <strong> {{ student.student_number }} </strong></li>
+                          <li>Name: <strong> {{ student.first_name }} {{ student.last_name }}</strong></li>
+                          <li>Sex: <strong> {{ student.gender }} </strong></li>
+                          <li>Date of Birth: <strong> {{ student.date_birth }} </strong></li>
+                          <li>Phone: <strong> {{ student.phone }} </strong></li>
+                          <li>Email: <strong> {{ student.email }} </strong></li>
+                          <li>Address: <strong> {{ student.address }} </strong></li>
+                          <li>GPA: <strong> {{ student.cgpa }} </strong></li>
+                        </ul>
+                      </div>
+  
+                          <!-- Modal footer -->
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                          </div> 
+                    </div>
+                  </div>
+                </div>
+                          <a class="btn btn-update btn-sm me-1" href="{% url 'update' student.id %}">
+                            <i class="fa-solid fa-square-pen fa-xl"></i>
+                          </a>  
+                            <button type="button" class="btn btn-update btn-sm me-1"  href="{% url 'delete' student.id %}" data-bs-toggle="modal" data-bs-target="#delete{{ student.id }}">
+                              <i class="fa-solid fa-trash-can fa-xl" href="#"></i>
+                            </button>                     
+            
+                                <!-- The Modal -->
+                                <div class="modal" id="delete{{ student.id }}">
+                                  <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                  <h4 class="modal-title">Student: {{ student.first_name }} {{ student.last_name }} ?.  </h4>
+                                </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                              <p>Are sure want delete this record </p> 
+                            </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                          <form action="{% url 'delete' student.id %}" method="POST">
+                            {% csrf_token %}
+                            <input type="submit" class="btn btn-primary" value ="delete">
+                          </form>
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                          </div>
+                      </div>
+                    </div>
+                  </td>
+                  
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            </div>
+           
+          </div>
+        </div>
+      
+      {% else %}
+      <h5 class="alert alert-primary ms-4 me-4">No Student Records</h5>
+      {% endif %}
+        </div>
+        </div>
+        {% endblock %}
+
+  

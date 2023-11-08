@@ -1,0 +1,48 @@
+{% extends 'student/base.html' %}
+
+{% block body %}
+<h1 class="text-center a-4">Add Student</h1>
+{% if success %}
+<div class="alert alert-success" role ="alert">
+    The student added successfully.
+<a href="{% url 'index' %}" class="alert-link"> Go to Home Page.</a>
+</div>
+{% else %}
+
+
+<div class ="row justity-content-center">
+    <div class="col-6">
+        <div class="card bg-light mb-3">
+            <div class="card-header">
+                <i class="fa-solid fa-address-card fa-lg"></i> Student regisgration
+            </div>
+            <div class="card-body">
+    <form method="POST" enctype="multipart/form-data">
+    
+        <!-- Security token -->
+        {% csrf_token %}
+    
+        <!-- Using the formset -->
+        {{ form.as_p }}
+        
+        <input type="submit" value="Submit">
+    </form>
+         
+    </div>
+    </div>
+    </div>
+    </div>
+
+
+
+
+
+        </div>
+              </div>
+    </div>
+  </div>
+
+
+
+{% endif %}
+{% endblock %}
